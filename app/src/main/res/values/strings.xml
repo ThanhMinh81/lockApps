@@ -1,0 +1,11 @@
+<resources>
+
+    <string name="app_name">AppLock</string>
+
+    <string-array name="spinner_list_item_array">
+        <item>All Apps</item>
+        <item>Locked Apps</item>
+    </string-array>
+
+
+</resources>
