@@ -5,11 +5,37 @@
 
     </style>
 
-    <style name="Theme.AppLock" parent="Base.Theme.AppLock" />
+    <style name="Theme.AppLock" parent="Base.Theme.AppLock" >
+<!--        <item name="searchViewStyle">@style/SearchView</item>-->
+        <item name="searchViewStyle">@style/MySearchViewStyle</item>
+
+    </style>
 
     <style name="ToolBarStyle" parent="Theme.AppCompat">
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColorSecondary">@android:color/white</item>
         <item name="actionMenuTextColor">@android:color/white</item>
     </style>
+
+    <style name="MySearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <item name="searchHintIcon">@null</item>
+    </style>
+    <style name="AppTheme.Toolbar" parent="Theme.AppCompat.Light">
+        <!--This line changes the color of text in Toolbar-->
+        <item name="android:textColorPrimary">@color/black</item>
+        <!--This line changes the color of icons in toolbar (back, overflow menu icons)-->
+        <item name="android:textColorSecondary">@color/black</item>
+    </style>
+
+    <style name="SearchView" parent="Widget.AppCompat.SearchView">
+        <item name="android:maxWidth">@dimen/maxSize</item>
+    </style>
+    <dimen name="maxSize">1000dp</dimen>
+
+    <dimen name="app_bar_padding">16dp</dimen>
+    <dimen name="app_bar_size_menu_item">24dp</dimen>
+
+
+
+
 </resources>

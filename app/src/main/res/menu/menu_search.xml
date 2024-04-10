@@ -1,8 +1,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:title="Search"
-        android:id="@+id/top_nav_search"
+        android:id="@+id/nav_search_app"
         android:icon="@drawable/round_arrow_circle_left_24"
         app:showAsAction="ifRoom|collapseActionView"
-        app:actionViewClass="androidx.appcompat.widget.SearchView"/>
+        android:actionLayout="@layout/search_view_layout"
+        app:actionViewClass="android.widget.SearchView"/>
 </menu>

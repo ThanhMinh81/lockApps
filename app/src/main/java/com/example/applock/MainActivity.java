@@ -2,6 +2,9 @@ package com.example.applock;
 
 import static android.content.ContentValues.TAG;
 
+import static androidx.core.view.MenuCompat.setShowAsAction;
+
+import android.app.ActionBar;
 import android.app.AppOpsManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -11,34 +14,45 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.FeatureInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.pm.ServiceInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.app.Service;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
+import androidx.core.view.MenuItemCompat;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -73,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
     MaterialToolbar materialToolbar;
 
-    SearchView searchView ;
+    android.widget.SearchView searchView;
 
 
     @Override
@@ -82,9 +96,16 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
+
         materialToolbar = findViewById(R.id.toolbar);
         materialToolbar.setTitleTextColor(Color.WHITE);
+
+        // phải có cái này thì searchview , title của toolbar mới được hiển thị
         setSupportActionBar(materialToolbar);
+
+        // Ẩn tiêu đề của toolbar
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
 
         spinnerSelected = this.<Spinner>findViewById(R.id.spinner_nav);
@@ -108,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
 
-
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
             @Override
@@ -128,13 +148,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
-
         spinnerSelected.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                     ((TextView) view).setTextColor(Color.WHITE);
+                ((TextView) view).setTextColor(Color.WHITE);
                 ((TextView) view).setTextSize(20);
 
             }
@@ -148,16 +165,81 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_search, menu);
 
-        MenuItem search = menu.findItem(R.id.top_nav_search);
+        MenuItem searchMenuItem = menu.findItem(R.id.nav_search_app);
+        if (searchMenuItem == null) {
+            return true;
+        }
 
-        return super.onCreateOptionsMenu(menu);
+        searchView = (SearchView) searchMenuItem.getActionView();
+        searchView.setIconifiedByDefault(false);
+        searchView.setIconified(false);
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+
+        int appBarPadding = getResources().getDimensionPixelSize(R.dimen.app_bar_padding);
+        int menuItemSize = getResources().getDimensionPixelSize(R.dimen.app_bar_size_menu_item);
+        searchView.setMaxWidth(materialToolbar.getWidth() * appBarPadding - menuItemSize);
+  
+//        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) searchView.getLayoutParams();
+//        android.view.ViewGroup.LayoutParams params = searchview.getLayoutParams();
+
+//        params.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+//        params.width = LinearLayout.LayoutParams.MATCH_PARENT;
+//        searchView.setLayoutParams(params);
+
+
+
+        searchMenuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+
+                setItemsVisibility(menu, item, false);
+                // Xử lý khi MenuItem được mở rộng (expanded)
+                if (getSupportActionBar() != null) {
+                    int searchIconId = getResources().getIdentifier("android:id/search_mag_icon", null, null);
+                    ImageView searchIcon = searchView.findViewById(searchIconId);
+                    if (searchIcon != null) {
+                        searchIcon.setVisibility(View.GONE);
+                    }
+
+                    searchView.setBackgroundColor(Color.TRANSPARENT);
+
+//                    searchView.setBackgroundColor(getResources().getColor(R.color.white));
+                }
+                return true; // Trả về true để xác nhận đã xử lý sự kiện mở rộng
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                // Xử lý khi MenuItem được thu gọn (collapsed)
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.BLUE));
+                }
+                return true; // Trả về true để xác nhận đã xử lý sự kiện thu gọn
+            }
+        });
+
+
+        return true;
+
     }
+
+    private void setItemsVisibility(Menu menu, MenuItem exception, boolean visible) {
+        for (int i=0; i<menu.size(); ++i) {
+            MenuItem item = menu.getItem(i);
+            if (item != exception) item.setVisible(visible);
+        }
+    }
+
+
 
     private void getListAppSystem() {
 

@@ -10,48 +10,41 @@
     tools:context=".MainActivity">
 
     <com.google.android.material.appbar.MaterialToolbar
+
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        app:titleTextColor="@color/white"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="90dp"
         android:background="#0984e3"
         android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:paddingStart="0dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="0dp"
+        android:paddingBottom="10dp"
+        android:theme="@style/AppTheme.Toolbar"
+        app:titleTextColor="@color/white">
 
 
-   <LinearLayout
-       android:gravity="center_vertical"
-        android:orientation="horizontal"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent">
-       <Spinner
-           android:layout_weight="1"
-           android:popupBackground="#0984e3"
-           android:textColor="@color/white"
-           android:id="@+id/spinner_nav"
-           android:layout_width="120dp"
-           android:layout_height="40dp" />
-
-       <SearchView
-            android:gravity="right"
+        <Spinner
+            android:id="@+id/spinner_nav"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
             android:layout_weight="1"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"/>
-   </LinearLayout>
-
-
+            android:popupBackground="#0984e3"
+            android:textColor="@color/white" />
 
     </com.google.android.material.appbar.MaterialToolbar>
 
 
 
     <com.google.android.material.tabs.TabLayout
-        android:background="#0984e3"
         android:id="@+id/tab_layout_activity"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        app:tabIndicatorFullWidth="true"
-        app:tabSelectedTextColor="@color/bg_fragment_setting" />
+        android:layout_height="wrap_content"
+        app:tabGravity="fill"
+        app:tabMode="fixed" />
+
+
+
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewpagerHome"
